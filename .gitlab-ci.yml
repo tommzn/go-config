@@ -1,0 +1,4 @@
+include:
+  - project: 'tommzn-solutions-dev/devops/ci-template'
+    ref: master
+    file: '/go.pkg.auto-ci.yml'

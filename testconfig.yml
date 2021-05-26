@@ -1,0 +1,25 @@
+namespace1:
+  key1: value1 
+key2: value2
+key3: 12345
+boolval: true
+durations:
+  seconds: 43s
+  minutes: 21m
+  hours: 5h
+  defaultvalue: 22
+  unsupported: 4d
+sliceofmaps:
+  - key1_1: val1_1
+    key1_2: val1_2
+  - key2_1: val2_1
+    key2_2: val2_2
+intslice:
+  - 342543545
+  - 3465567
+  - 547657
+intslice2:
+  - 342543545
+  - XXX
+  - 547657
+  
