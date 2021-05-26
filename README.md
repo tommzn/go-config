@@ -2,6 +2,7 @@
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/tommzn/go-config)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/tommzn/go-config)
 [![Go Report Card](https://goreportcard.com/badge/github.com/tommzn/go-config)](https://goreportcard.com/report/github.com/tommzn/go-config)
+[![Actions Status](https://github.com/tommzn/go-utils/actions/workflows/go.pkg.auto-ci.yml/badge.svg)](https://github.com/tommzn/go-utils/actions)
 
 # Read & Access Configurations 
 Provides different sources to read config and a generic interface to access configurations. Under the hood it used ![Viper Config]/https://github.com/spf13/viper) to load, parse and access configurations.
