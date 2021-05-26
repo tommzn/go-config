@@ -1,6 +1,6 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/tommzn/go-config.svg)](https://pkg.go.dev/github.com/tommzn/go-config)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/tommzn/go-config)
-![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/tommzn/go-config)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/tommzn/go-config)
 [![Go Report Card](https://goreportcard.com/badge/github.com/tommzn/go-config)](https://goreportcard.com/report/github.com/tommzn/go-config)
 
 # Read & Access Configurations 
