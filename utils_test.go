@@ -45,6 +45,10 @@ func (suite *UtilsTestSuite) TestPointerConverter() {
 	v3 := true
 	p3 := AsBoolPtr(v3)
 	suite.Equal(v3, *p3)
+
+	v4 := 2 * time.Second
+	p4 := AsDurationPtr(v4)
+	suite.Equal(v4, *p4)
 }
 
 func (suite *UtilsTestSuite) TestConvertToDuration() {

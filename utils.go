@@ -36,6 +36,11 @@ func AsBoolPtr(v bool) *bool {
 	return &v
 }
 
+// AsDurationPtr returns given value as pointer.
+func AsDurationPtr(v time.Duration) *time.Duration {
+	return &v
+}
+
 // toDuration will try to convert passed config value to a duration.
 // Examples: 1s, 4m, 2h. Default unit is second, so config value 3 will be returned as 3 seconds.
 func toDuration(value string) *time.Duration {
