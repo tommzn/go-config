@@ -78,9 +78,8 @@ func extractNumbers(strValue string) *string {
 	intRegexp := regexp.MustCompile("[0-9]+")
 	if match := intRegexp.FindString(strValue); match != "" {
 		return &match
-	} else {
-		return nil
 	}
+	return nil
 }
 
 // isValidDuration if passed config values is composed by a number

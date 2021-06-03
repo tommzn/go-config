@@ -81,7 +81,7 @@ func (conf *ViperConfig) GetAsDuration(key string, defaultValue *time.Duration) 
 	return defaultValue
 }
 
-// GetSliceOfMap returns local config values as slice of maps.
+// GetAsSliceOfMaps returns local config values as slice of maps.
 func (conf *ViperConfig) GetAsSliceOfMaps(key string) []map[string]string {
 
 	var retValues []map[string]string

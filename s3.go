@@ -25,8 +25,8 @@ type S3ConfigSource struct {
 	key string
 }
 
-// newS3Configsource returns a new S3 config source which uses passed config file from given S4 bucket.
-// If region is nil it will try to get current aws region from envrionment var AWS_REGION.
+// NewS3ConfigSource returns a new S3 config source which uses passed config file from given S4 bucket.
+// If region is nil it will try to get current aws region from environment var AWS_REGION.
 func NewS3ConfigSource(bucket, key string, region *string) ConfigSource {
 
 	if region == nil {
@@ -48,11 +48,11 @@ func (source *S3ConfigSource) Load() (Config, error) {
 
 	config := viper.New()
 	config.SetConfigType("yaml")
-	if reader, err := source.readConfig(); err == nil {
-		return newViperConfigFromReader(reader)
-	} else {
+	reader, err := source.readConfig()
+	if err != nil {
 		return nil, err
 	}
+	return newViperConfigFromReader(reader)
 }
 
 // readConfig downloads defined config file from AWS S3 bucket and

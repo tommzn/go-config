@@ -12,7 +12,7 @@ type FileConfigSource struct {
 	configFile *string
 }
 
-// FileConfigSource returns a new config source for given file.
+// NewFileConfigSource returns a new config source for given file.
 // If you don't passed a specific config file this source will have a lool
 // at different places for a default config file.
 // See Load method for more details.
