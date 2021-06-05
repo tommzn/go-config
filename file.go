@@ -52,5 +52,5 @@ func (source *FileConfigSource) Load() (Config, error) {
 	if err == nil {
 		config = &ViperConfig{config: viperConfig}
 	}
-	return config, nil
+	return config, err
 }
