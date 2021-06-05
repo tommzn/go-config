@@ -44,7 +44,6 @@ func (source *FileConfigSource) Load() (Config, error) {
 	viperConfig.AddConfigPath("$HOME/go_config/")
 	viperConfig.AddConfigPath("/etc/go_config/")
 	viperConfig.SetConfigName("config")
-	viperConfig.SetConfigName("testconfig")
 	viperConfig.SetConfigType("yaml")
 	err := viperConfig.ReadInConfig()
 
