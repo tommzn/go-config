@@ -2,7 +2,6 @@ package config
 
 import (
 	"io/ioutil"
-	"os"
 	"time"
 
 	"github.com/stretchr/testify/suite"
@@ -34,15 +33,16 @@ func (suite *ConfigTestSuite) TestStaticConfigSource() {
 func (suite *ConfigTestSuite) TestS3ConfigSource() {
 
 	awsRegion1 := "eu-central-1"
-	configSource1 := NewS3ConfigSource("no-bucket", "bo-key", &awsRegion1)
+	configSource1 := NewS3ConfigSource("no-bucket", "no-key", &awsRegion1)
 	config1, err1 := configSource1.Load()
 	suite.NotNil(err1)
 	suite.Nil(config1)
 
-	configSource2 := s3ConfigSourceForTest()
+	configSource2, err := NewS3ConfigSourceFromEnv()
 	if configSource2 == nil {
 		suite.T().Skip("Skip S3 tests. Missing env vars GO_CONFIG_S3_BUCKET and GO_CONFIG_S3_KEY to access S3 for test.")
 	}
+	suite.Nil(err)
 	suite.testConfigSource(configSource2)
 }
 
@@ -224,18 +224,4 @@ func (suite *ConfigTestSuite) staticConfigForTest() string {
 	fileContent, err := ioutil.ReadFile("testconfig.yml")
 	suite.Nil(err)
 	return string(fileContent)
-}
-
-func s3ConfigSourceForTest() ConfigSource {
-
-	keys := []string{"GO_CONFIG_S3_BUCKET", "GO_CONFIG_S3_KEY"}
-	values := []string{}
-	for _, key := range keys {
-		if value, ok := os.LookupEnv(key); ok {
-			values = append(values, value)
-		} else {
-			return nil
-		}
-	}
-	return NewS3ConfigSource(values[0], values[1], nil)
 }

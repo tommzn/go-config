@@ -2,6 +2,7 @@ package config
 
 import (
 	"bytes"
+	"errors"
 	"io"
 	"os"
 
@@ -41,6 +42,38 @@ func NewS3ConfigSource(bucket, key string, region *string) ConfigSource {
 		bucket: bucket,
 		key:    key,
 	}
+}
+
+// NewS3ConfigSourceFromEnv creates a new S3 config source using values defined by
+// environment variables.
+//
+//	AWS_REGION 			- Defines AWS region the bucket is related to
+// 	GO_CONFIG_S3_BUCKET - Bucket where config file are located
+// 	GO_CONFIG_S3_KEY 	- Config file in a bucket
+func NewS3ConfigSourceFromEnv() (ConfigSource, error) {
+
+	region, ok := os.LookupEnv("AWS_REGION")
+	if !ok {
+		return nil, errors.New("Missing AWS_REGION")
+	}
+
+	bucket, ok := os.LookupEnv("GO_CONFIG_S3_BUCKET")
+	if !ok {
+		return nil, errors.New("Missing GO_CONFIG_S3_BUCKET")
+	}
+
+	key, ok := os.LookupEnv("GO_CONFIG_S3_KEY")
+	if !ok {
+		return nil, errors.New("Missing GO_CONFIG_S3_KEY")
+	}
+
+	return &S3ConfigSource{
+		config: &aws.Config{
+			Region: &region,
+		},
+		bucket: bucket,
+		key:    key,
+	}, nil
 }
 
 // Load config file from S3 and pass it to a ViperConfig.
