@@ -24,8 +24,8 @@ func NewFileConfigSource(configFile *string) ConfigSource {
 // It uses the config file you've set during creating this source or
 // it tries to find a file names config.yml or testconfig.yml in following locations.
 // - loca directory, "./"
-// - user home, "$HOMR/"
-// - user home at go_config dir, "$HOMR/go_config/"
+// - user home, "$HOME/"
+// - user home at go_config dir, "$HOME/go_config/"
 // - at "/etc/go_config/"
 func (source *FileConfigSource) Load() (Config, error) {
 
@@ -40,8 +40,8 @@ func (source *FileConfigSource) Load() (Config, error) {
 
 	viperConfig := viper.New()
 	viperConfig.AddConfigPath(".")
-	viperConfig.AddConfigPath("$HOMR/")
-	viperConfig.AddConfigPath("$HOMR/go_config/")
+	viperConfig.AddConfigPath("$HOME/")
+	viperConfig.AddConfigPath("$HOME/go_config/")
 	viperConfig.AddConfigPath("/etc/go_config/")
 	viperConfig.SetConfigName("config")
 	viperConfig.SetConfigName("testconfig")
