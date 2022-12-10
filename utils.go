@@ -41,6 +41,11 @@ func AsDurationPtr(v time.Duration) *time.Duration {
 	return &v
 }
 
+// AsDuration will try to convert passed string to time.Duration
+func AsDuration(value string) *time.Duration {
+	return toDuration(value)
+}
+
 // toDuration will try to convert passed config value to a duration.
 // Examples: 1s, 4m, 2h. Default unit is second, so config value 3 will be returned as 3 seconds.
 func toDuration(value string) *time.Duration {

@@ -69,6 +69,10 @@ func (suite *UtilsTestSuite) TestConvertToDuration() {
 	suite.NotNil(duration4)
 	suite.Equal(11*time.Second, *duration4)
 
+	duration5 := AsDuration("7s")
+	suite.NotNil(duration5)
+	suite.Equal(7*time.Second, *duration5)
+
 	suite.Nil(toDuration("3d"))
 	suite.Nil(toDuration("xxx"))
 	suite.Nil(toDuration("ABCs"))
