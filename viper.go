@@ -91,11 +91,8 @@ func (conf *ViperConfig) GetAsSliceOfMaps(key string) []map[string]string {
 		return retValues
 	}
 	if configSlice, ok := configValue.([]interface{}); ok {
-
 		for _, configItem := range configSlice {
-
-			if configMap, ok := configItem.(map[interface{}]interface{}); ok {
-
+			if configMap, ok := configItem.(map[string]interface{}); ok {
 				stringMap := conf.toStringMap(configMap)
 				if len(stringMap) > 0 {
 					retValues = append(retValues, stringMap)
@@ -107,14 +104,12 @@ func (conf *ViperConfig) GetAsSliceOfMaps(key string) []map[string]string {
 }
 
 // toStringMap try to convert passed map with interface values to a map with string keys and values.
-func (conf *ViperConfig) toStringMap(interfaceMap map[interface{}]interface{}) map[string]string {
+func (conf *ViperConfig) toStringMap(interfaceMap map[string]interface{}) map[string]string {
 
 	stringMap := make(map[string]string)
 	for key, val := range interfaceMap {
-		if strKey, okKey := key.(string); okKey {
-			if strVal, okVal := val.(string); okVal {
-				stringMap[strKey] = strVal
-			}
+		if strVal, okVal := val.(string); okVal {
+			stringMap[key] = strVal
 		}
 	}
 	return stringMap
