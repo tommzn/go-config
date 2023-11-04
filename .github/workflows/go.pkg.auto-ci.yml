@@ -3,7 +3,10 @@ on:
   push:
     branches:
       - main
+permissions:
+  contents: write
+
 
 jobs:
-  go-pkg-auto-ci:
-    uses:  tommzn/github-ci/.github/workflows/go.pkg.auto-ci.yml@v1.0.60
+  go-auto-ci:
+    uses:  tommzn/github-ci/.github/workflows/go.pkg.auto-ci.yml@v1.0.63
