@@ -33,7 +33,8 @@ func (suite *ConfigTestSuite) TestStaticConfigSource() {
 func (suite *ConfigTestSuite) TestS3ConfigSource() {
 
 	awsRegion1 := "eu-central-1"
-	configSource1 := NewS3ConfigSource("no-bucket", "no-key", &awsRegion1)
+	configSource1, err := NewS3ConfigSource("no-bucket", "no-key", &awsRegion1)
+	suite.Nil(err)
 	config1, err1 := configSource1.Load()
 	suite.NotNil(err1)
 	suite.Nil(config1)
