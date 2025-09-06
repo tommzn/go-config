@@ -114,3 +114,10 @@ func (conf *ViperConfig) toStringMap(interfaceMap map[string]interface{}) map[st
 	}
 	return stringMap
 }
+
+// Unmarshal decodes the configuration into the provided struct or map.
+// The `rawVal` parameter should be a pointer to a struct or map where the
+// configuration values will be unmarshaled. Returns an error if unmarshaling fails.
+func (conf *ViperConfig) Unmarshal(rawVal any) error {
+	return conf.config.Unmarshal(rawVal)
+}

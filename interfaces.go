@@ -42,4 +42,9 @@ type Config interface {
 
 	// GetSliceOfMap returns all config values as a slice of maps.
 	GetAsSliceOfMaps(key string) []map[string]string
+
+	// Unmarshal decodes the configuration into the provided struct or map.
+	// The `rawVal` parameter should be a pointer to a struct or map where the
+	// configuration values will be unmarshaled. Returns an error if unmarshaling fails.
+	Unmarshal(rawVal any) error
 }
