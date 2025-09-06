@@ -115,9 +115,9 @@ func (conf *ViperConfig) toStringMap(interfaceMap map[string]interface{}) map[st
 	return stringMap
 }
 
-// RawConfig provides direct access to the underlying *viper.Viper instance.
-// This method allows advanced users to interact with the Viper library directly,
-// enabling operations not covered by the ViperConfig wrapper methods.
-func (conf *ViperConfig) RawConfig() *viper.Viper {
-	return conf.config
+// Unmarshal decodes the configuration into the provided struct or map.
+// The `rawVal` parameter should be a pointer to a struct or map where the
+// configuration values will be unmarshaled. Returns an error if unmarshaling fails.
+func (conf *ViperConfig) Unmarshal(rawVal any) error {
+	return conf.config.Unmarshal(rawVal)
 }

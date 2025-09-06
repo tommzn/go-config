@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"time"
 
+	"github.com/spf13/viper"
 	"github.com/stretchr/testify/suite"
 	//"log"
 
@@ -225,4 +226,50 @@ func (suite *ConfigTestSuite) staticConfigForTest() string {
 	fileContent, err := ioutil.ReadFile("testconfig.yml")
 	suite.Nil(err)
 	return string(fileContent)
+}
+
+func (suite *ConfigTestSuite) TestUnmarshalValidStruct() {
+
+	type ConfigStruct struct {
+		Key1 string `mapstructure:"key1"`
+		Key2 int    `mapstructure:"key2"`
+	}
+	rawConfig := map[string]interface{}{
+		"key1": "value1",
+		"key2": 123,
+	}
+	viperInstance := viper.New()
+	for k, v := range rawConfig {
+		viperInstance.Set(k, v)
+	}
+	conf := &ViperConfig{config: viperInstance}
+
+	var result ConfigStruct
+	err := conf.Unmarshal(&result)
+
+	suite.Nil(err)
+	suite.Equal("value1", result.Key1)
+	suite.Equal(123, result.Key2)
+}
+
+func (suite *ConfigTestSuite) TestUnmarshalInvalidStruct() {
+
+	type ConfigStruct struct {
+		Key1 string `mapstructure:"key1"`
+		Key2 int    `mapstructure:"key2"`
+	}
+	rawConfig := map[string]interface{}{
+		"key1": "value1",
+		"key2": "not-an-int",
+	}
+	viperInstance := viper.New()
+	for k, v := range rawConfig {
+		viperInstance.Set(k, v)
+	}
+	conf := &ViperConfig{config: viperInstance}
+
+	var result ConfigStruct
+	err := conf.Unmarshal(&result)
+
+	suite.NotNil(err)
 }
