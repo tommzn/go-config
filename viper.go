@@ -114,3 +114,10 @@ func (conf *ViperConfig) toStringMap(interfaceMap map[string]interface{}) map[st
 	}
 	return stringMap
 }
+
+// RawConfig provides direct access to the underlying *viper.Viper instance.
+// This method allows advanced users to interact with the Viper library directly,
+// enabling operations not covered by the ViperConfig wrapper methods.
+func (conf *ViperConfig) RawConfig() *viper.Viper {
+	return conf.config
+}

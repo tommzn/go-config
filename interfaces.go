@@ -2,6 +2,8 @@ package config
 
 import (
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 // ConfigSource can be used to load a config from different sources and
@@ -42,4 +44,9 @@ type Config interface {
 
 	// GetSliceOfMap returns all config values as a slice of maps.
 	GetAsSliceOfMaps(key string) []map[string]string
+
+	// RawConfig provides access to the underlying *viper.Viper instance.
+	// This allows direct interaction with the Viper library for advanced
+	// configuration operations not covered by the Config interface methods.
+	RawConfig() *viper.Viper
 }
