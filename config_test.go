@@ -48,6 +48,69 @@ func (suite *ConfigTestSuite) TestS3ConfigSource() {
 	suite.testConfigSource(configSource2)
 }
 
+func (suite *ConfigTestSuite) TestS3ConfigSourceWithoutRegion() {
+
+	// Ensure AWS_REGION is unset so the no-region branch is exercised.
+	prev, hasPrev := os.LookupEnv("AWS_REGION")
+	os.Unsetenv("AWS_REGION")
+	defer func() {
+		if hasPrev {
+			os.Setenv("AWS_REGION", prev)
+		}
+	}()
+
+	configSource, err := NewS3ConfigSource("no-bucket", "no-key", nil)
+	suite.Nil(err)
+	suite.NotNil(configSource)
+
+	config, err := configSource.Load()
+	suite.NotNil(err)
+	suite.Nil(config)
+}
+
+func (suite *ConfigTestSuite) TestS3ConfigSourceFromEnvMissingBucket() {
+
+	prev, hasPrev := os.LookupEnv("AWS_REGION")
+	os.Setenv("AWS_REGION", "eu-central-1")
+	defer func() {
+		if hasPrev {
+			os.Setenv("AWS_REGION", prev)
+		} else {
+			os.Unsetenv("AWS_REGION")
+		}
+	}()
+
+	os.Unsetenv("GO_CONFIG_S3_BUCKET")
+	os.Unsetenv("GO_CONFIG_S3_KEY")
+
+	source, err := NewS3ConfigSourceFromEnv()
+	suite.NotNil(err)
+	suite.Nil(source)
+	suite.Contains(err.Error(), "GO_CONFIG_S3_BUCKET")
+}
+
+func (suite *ConfigTestSuite) TestS3ConfigSourceFromEnvMissingKey() {
+
+	prev, hasPrev := os.LookupEnv("AWS_REGION")
+	os.Setenv("AWS_REGION", "eu-central-1")
+	defer func() {
+		if hasPrev {
+			os.Setenv("AWS_REGION", prev)
+		} else {
+			os.Unsetenv("AWS_REGION")
+		}
+	}()
+
+	os.Setenv("GO_CONFIG_S3_BUCKET", "some-bucket")
+	defer os.Unsetenv("GO_CONFIG_S3_BUCKET")
+	os.Unsetenv("GO_CONFIG_S3_KEY")
+
+	source, err := NewS3ConfigSourceFromEnv()
+	suite.NotNil(err)
+	suite.Nil(source)
+	suite.Contains(err.Error(), "GO_CONFIG_S3_KEY")
+}
+
 func (suite *ConfigTestSuite) TestFileConfigSource() {
 
 	configSource1 := NewFileConfigSource(nil)
