@@ -11,7 +11,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/spf13/viper"
 )
 
 // S3ConfigSource loads a YAML config from a file in an AWS S3 bucket.
@@ -76,9 +75,6 @@ func NewS3ConfigSourceFromEnv() (ConfigSource, error) {
 
 // Load config file from S3 and pass it to a ViperConfig.
 func (source *S3ConfigSource) Load() (Config, error) {
-
-	config := viper.New()
-	config.SetConfigType("yaml")
 
 	reader, err := source.readConfig()
 	if err != nil {

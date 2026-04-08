@@ -10,6 +10,11 @@ import (
 	"github.com/spf13/viper"
 )
 
+var (
+	intRegexp        = regexp.MustCompile("[0-9]+")
+	durationRegexp   = regexp.MustCompile("^[0-9]+[smh,0-9]{0,1}$")
+)
+
 // newViperConfigFromReader returns a viper config for content provided by passed reader.
 func newViperConfigFromReader(reader io.Reader) (Config, error) {
 
@@ -65,7 +70,7 @@ func toDuration(value string) *time.Duration {
 
 func durationForUnit(durationAsString string) time.Duration {
 
-	switch true {
+	switch {
 	case strings.HasSuffix(durationAsString, "s"):
 		return 1 * time.Second
 	case strings.HasSuffix(durationAsString, "m"):
@@ -80,7 +85,6 @@ func durationForUnit(durationAsString string) time.Duration {
 // extractNumbers try to get numbers from given config value.
 func extractNumbers(strValue string) *string {
 
-	intRegexp := regexp.MustCompile("[0-9]+")
 	if match := intRegexp.FindString(strValue); match != "" {
 		return &match
 	}
@@ -90,7 +94,5 @@ func extractNumbers(strValue string) *string {
 // isValidDuration if passed config values is composed by a number
 // followed by a single char of s, m or h. A single int value is valid as well.
 func isValidDuration(value string) bool {
-
-	durationWithUnit := regexp.MustCompile("^[0-9]+[smh,0-9]{0,1}$")
-	return durationWithUnit.MatchString(value)
+	return durationRegexp.MatchString(value)
 }

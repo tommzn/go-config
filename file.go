@@ -2,7 +2,7 @@ package config
 
 import (
 	"bytes"
-	"io/ioutil"
+	"os"
 
 	"github.com/spf13/viper"
 )
@@ -31,7 +31,7 @@ func (source *FileConfigSource) Load() (Config, error) {
 
 	if source.configFile != nil {
 
-		fileContent, err := ioutil.ReadFile(*source.configFile)
+		fileContent, err := os.ReadFile(*source.configFile)
 		if err != nil {
 			return nil, err
 		}

@@ -1,7 +1,7 @@
 package config
 
 import (
-	"io/ioutil"
+	"os"
 	"time"
 
 	"github.com/spf13/viper"
@@ -223,7 +223,7 @@ func (suite *ConfigTestSuite) testGetConfigValuesAsDuration(config Config) {
 
 // staticConfigForTest returns a static config in YAML format.
 func (suite *ConfigTestSuite) staticConfigForTest() string {
-	fileContent, err := ioutil.ReadFile("testconfig.yml")
+	fileContent, err := os.ReadFile("testconfig.yml")
 	suite.Nil(err)
 	return string(fileContent)
 }
