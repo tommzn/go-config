@@ -5,10 +5,12 @@ on:
       - main
       - 'features/**'
       - 'dependabot/**'
+      - 'copilot/**'
   pull_request:
     branches:
       - 'features/**'
       - 'dependabot/**'
+      - 'copilot/**'
 
 permissions:
   contents: write
