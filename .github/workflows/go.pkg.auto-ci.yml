@@ -6,11 +6,13 @@ on:
       - 'features/**'
       - 'dependabot/**'
       - 'copilot/**'
+      - 'deps/**'
   pull_request:
     branches:
       - 'features/**'
       - 'dependabot/**'
       - 'copilot/**'
+      - 'deps/**'
 
 permissions:
   contents: write
