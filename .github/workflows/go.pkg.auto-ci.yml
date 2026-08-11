@@ -3,14 +3,9 @@ on:
   push:
     branches:
       - main
-      - 'features/**'
-      - 'dependabot/**'
-      - 'copilot/**'
   pull_request:
     branches:
-      - 'features/**'
-      - 'dependabot/**'
-      - 'copilot/**'
+      - main
 
 permissions:
   contents: write
