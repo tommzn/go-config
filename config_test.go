@@ -53,11 +53,13 @@ func (suite *ConfigTestSuite) TestS3ConfigSourceWithoutRegion() {
 	// Ensure AWS_REGION is unset so the no-region branch is exercised.
 	prev, hasPrev := os.LookupEnv("AWS_REGION")
 	os.Unsetenv("AWS_REGION")
-	defer func() {
+	suite.T().Cleanup(func() {
 		if hasPrev {
 			os.Setenv("AWS_REGION", prev)
+		} else {
+			os.Unsetenv("AWS_REGION")
 		}
-	}()
+	})
 
 	configSource, err := NewS3ConfigSource("no-bucket", "no-key", nil)
 	suite.Nil(err)
@@ -70,18 +72,21 @@ func (suite *ConfigTestSuite) TestS3ConfigSourceWithoutRegion() {
 
 func (suite *ConfigTestSuite) TestS3ConfigSourceFromEnvMissingBucket() {
 
-	prev, hasPrev := os.LookupEnv("AWS_REGION")
-	os.Setenv("AWS_REGION", "eu-central-1")
-	defer func() {
-		if hasPrev {
-			os.Setenv("AWS_REGION", prev)
-		} else {
-			os.Unsetenv("AWS_REGION")
-		}
-	}()
-
+	suite.T().Setenv("AWS_REGION", "eu-central-1")
+	prevBucket, hasBucket := os.LookupEnv("GO_CONFIG_S3_BUCKET")
 	os.Unsetenv("GO_CONFIG_S3_BUCKET")
+	suite.T().Cleanup(func() {
+		if hasBucket {
+			os.Setenv("GO_CONFIG_S3_BUCKET", prevBucket)
+		}
+	})
+	prevKey, hasKey := os.LookupEnv("GO_CONFIG_S3_KEY")
 	os.Unsetenv("GO_CONFIG_S3_KEY")
+	suite.T().Cleanup(func() {
+		if hasKey {
+			os.Setenv("GO_CONFIG_S3_KEY", prevKey)
+		}
+	})
 
 	source, err := NewS3ConfigSourceFromEnv()
 	suite.NotNil(err)
@@ -91,19 +96,15 @@ func (suite *ConfigTestSuite) TestS3ConfigSourceFromEnvMissingBucket() {
 
 func (suite *ConfigTestSuite) TestS3ConfigSourceFromEnvMissingKey() {
 
-	prev, hasPrev := os.LookupEnv("AWS_REGION")
-	os.Setenv("AWS_REGION", "eu-central-1")
-	defer func() {
-		if hasPrev {
-			os.Setenv("AWS_REGION", prev)
-		} else {
-			os.Unsetenv("AWS_REGION")
-		}
-	}()
-
-	os.Setenv("GO_CONFIG_S3_BUCKET", "some-bucket")
-	defer os.Unsetenv("GO_CONFIG_S3_BUCKET")
+	suite.T().Setenv("AWS_REGION", "eu-central-1")
+	suite.T().Setenv("GO_CONFIG_S3_BUCKET", "some-bucket")
+	prevKey, hasKey := os.LookupEnv("GO_CONFIG_S3_KEY")
 	os.Unsetenv("GO_CONFIG_S3_KEY")
+	suite.T().Cleanup(func() {
+		if hasKey {
+			os.Setenv("GO_CONFIG_S3_KEY", prevKey)
+		}
+	})
 
 	source, err := NewS3ConfigSourceFromEnv()
 	suite.NotNil(err)
