@@ -78,6 +78,8 @@ func (suite *ConfigTestSuite) TestS3ConfigSourceFromEnvMissingBucket() {
 	suite.T().Cleanup(func() {
 		if hasBucket {
 			os.Setenv("GO_CONFIG_S3_BUCKET", prevBucket)
+		} else {
+			os.Unsetenv("GO_CONFIG_S3_BUCKET")
 		}
 	})
 	prevKey, hasKey := os.LookupEnv("GO_CONFIG_S3_KEY")
@@ -85,6 +87,8 @@ func (suite *ConfigTestSuite) TestS3ConfigSourceFromEnvMissingBucket() {
 	suite.T().Cleanup(func() {
 		if hasKey {
 			os.Setenv("GO_CONFIG_S3_KEY", prevKey)
+		} else {
+			os.Unsetenv("GO_CONFIG_S3_KEY")
 		}
 	})
 
@@ -103,6 +107,8 @@ func (suite *ConfigTestSuite) TestS3ConfigSourceFromEnvMissingKey() {
 	suite.T().Cleanup(func() {
 		if hasKey {
 			os.Setenv("GO_CONFIG_S3_KEY", prevKey)
+		} else {
+			os.Unsetenv("GO_CONFIG_S3_KEY")
 		}
 	})
 
