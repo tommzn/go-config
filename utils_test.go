@@ -18,18 +18,21 @@ func TestUtilsTestSuite(t *testing.T) {
 	suite.Run(t, new(UtilsTestSuite))
 }
 
-func (suite *UtilsTestSuite) TestNewViperConfigFromReader() {
+func (suite *UtilsTestSuite) TestParseConfigFromReader() {
+
+	defer SetConfigType("yaml")
+	SetConfigType("yaml")
 
 	configStr1 := "key: val"
-	config1, err1 := newViperConfigFromReader(strings.NewReader(configStr1))
+	config1, err1 := parseConfigFromReader(strings.NewReader(configStr1))
 	suite.Nil(err1)
 	suite.NotNil(config1)
 
+	// Not a mapping at the top level - fails to unmarshal into map[string]interface{}.
 	configStr2 := "key1=val1"
-	config2, err2 := newViperConfigFromReader(strings.NewReader(configStr2))
+	config2, err2 := parseConfigFromReader(strings.NewReader(configStr2))
 	suite.NotNil(err2)
 	suite.Nil(config2)
-
 }
 
 func (suite *UtilsTestSuite) TestPointerConverter() {
@@ -99,11 +102,12 @@ func (suite *UtilsTestSuite) TestIsValidDuration() {
 	suite.False(isValidDuration("ABC"))
 }
 
-func (suite *UtilsTestSuite) TestSetViperConfigType() {
+func (suite *UtilsTestSuite) TestSetConfigType() {
 
-	suite.Equal("yaml", viperConfigType)
+	defer SetConfigType("yaml")
+	suite.Equal("yaml", configType)
 
 	jsonConfigType := "json"
-	SetViperConfigType(jsonConfigType)
-	suite.Equal(jsonConfigType, viperConfigType)
+	SetConfigType(jsonConfigType)
+	suite.Equal(jsonConfigType, configType)
 }
