@@ -4,9 +4,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/spf13/viper"
 	"github.com/stretchr/testify/suite"
-	//"log"
 
 	"testing"
 )
@@ -45,6 +43,40 @@ func (suite *ConfigTestSuite) TestFileConfigSource() {
 	config, err := configSource3.Load()
 	suite.NotNil(err)
 	suite.Nil(config)
+}
+
+func (suite *ConfigTestSuite) TestFileConfigSourceJSON() {
+
+	defer SetConfigType("yaml")
+	SetConfigType("json")
+
+	configFile := "./testconfig.json"
+	configSource := NewFileConfigSource(&configFile)
+	suite.testConfigSource(configSource)
+}
+
+func (suite *ConfigTestSuite) TestFileConfigSourceDefaultSearchJSON() {
+
+	defer SetConfigType("yaml")
+	SetConfigType("json")
+
+	// config.json doesn't exist in the package dir (only config.yml does), so the
+	// default multi-path search should fail to find anything while type is json.
+	configSource := NewFileConfigSource(nil)
+	config, err := configSource.Load()
+	suite.NotNil(err)
+	suite.Nil(config)
+}
+
+func (suite *ConfigTestSuite) TestDefaultConfigFileNames() {
+
+	defer SetConfigType("yaml")
+
+	SetConfigType("yaml")
+	suite.Equal([]string{"config.yaml", "config.yml"}, defaultConfigFileNames())
+
+	SetConfigType("json")
+	suite.Equal([]string{"config.json"}, defaultConfigFileNames())
 }
 
 func (suite *ConfigTestSuite) testConfigSource(configSource ConfigSource) {
@@ -221,11 +253,7 @@ func (suite *ConfigTestSuite) TestUnmarshalValidStruct() {
 		"key1": "value1",
 		"key2": 123,
 	}
-	viperInstance := viper.New()
-	for k, v := range rawConfig {
-		viperInstance.Set(k, v)
-	}
-	conf := &ViperConfig{config: viperInstance}
+	conf := &mapConfig{values: rawConfig}
 
 	var result ConfigStruct
 	err := conf.Unmarshal(&result)
@@ -245,11 +273,7 @@ func (suite *ConfigTestSuite) TestUnmarshalInvalidStruct() {
 		"key1": "value1",
 		"key2": "not-an-int",
 	}
-	viperInstance := viper.New()
-	for k, v := range rawConfig {
-		viperInstance.Set(k, v)
-	}
-	conf := &ViperConfig{config: viperInstance}
+	conf := &mapConfig{values: rawConfig}
 
 	var result ConfigStruct
 	err := conf.Unmarshal(&result)

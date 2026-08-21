@@ -6,17 +6,19 @@
 
 # go-config
 
-A Go library for loading and accessing YAML configuration from multiple sources through a single, unified interface. Built on top of [Viper](https://github.com/spf13/viper).
+A Go library for loading and accessing YAML or JSON configuration from multiple sources through a single, unified interface.
 
 ## Features
 
-- Load configuration from local YAML files, in-memory strings, or AWS S3
+- Load configuration from local YAML or JSON files, in-memory strings, or AWS S3
 - Uniform `Config` interface regardless of the source
 - Typed accessors: string, int, int slice, bool, duration, slice of maps
 - Unmarshal configuration directly into structs
 - Automatic file discovery across standard config paths
-- Dot-notation access for nested keys (e.g. `"namespace.key"`)
+- Dot-notation access for nested keys (e.g. `"namespace.key"`), case-insensitive
 - Pointer-based return values with default value fallback
+
+Parsing is handled directly with [`gopkg.in/yaml.v3`](https://pkg.go.dev/gopkg.in/yaml.v3) and the standard library's `encoding/json` - no [Viper](https://github.com/spf13/viper) dependency.
 
 ## Installation
 
@@ -46,7 +48,7 @@ fmt.Println(*value)
 
 ### File
 
-Loads a YAML file from a given path. If no path is provided, it searches for `config.yml` in the following locations (in order):
+Loads a YAML (or JSON, see [Configuration Format](#configuration-format) below) file from a given path. If no path is provided, it searches for `config.yaml`/`config.yml` (or `config.json`) in the following locations (in order):
 
 1. `./`
 2. `$HOME/`
@@ -54,7 +56,7 @@ Loads a YAML file from a given path. If no path is provided, it searches for `co
 4. `/etc/go_config/`
 
 ```go
-// Auto-discover config.yml
+// Auto-discover config.yaml / config.yml
 source := config.NewFileConfigSource(nil)
 
 // Explicit path
@@ -66,7 +68,7 @@ cfg, err := source.Load()
 
 ### Static
 
-Loads configuration from an in-memory YAML string. Useful for tests or embedded defaults.
+Loads configuration from an in-memory YAML (or JSON) string. Useful for tests or embedded defaults.
 
 ```go
 yaml := `
@@ -75,6 +77,17 @@ server:
   port: 8080
 `
 source := config.NewStaticConfigSource(yaml)
+cfg, err := source.Load()
+```
+
+### Configuration Format
+
+Config content is parsed as YAML by default. Switch to JSON with `SetConfigType`, which applies to `NewFileConfigSource`, `NewStaticConfigSource`, and `NewConfigFromReader`:
+
+```go
+config.SetConfigType("json") // default is "yaml"
+
+source := config.NewFileConfigSource(nil) // now looks for config.json
 cfg, err := source.Load()
 ```
 

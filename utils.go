@@ -6,8 +6,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/spf13/viper"
 )
 
 var (
@@ -15,21 +13,12 @@ var (
 	durationRegexp   = regexp.MustCompile("^[0-9]+[smh,0-9]{0,1}$")
 )
 
-// NewConfigFromReader returns a Config loaded from the YAML content provided by reader.
-// This is useful for implementing custom ConfigSource types in external packages.
+// NewConfigFromReader returns a Config loaded from the content provided by reader,
+// parsed as YAML or JSON depending on the currently configured config type (see
+// SetConfigType). This is useful for implementing custom ConfigSource types in
+// external packages.
 func NewConfigFromReader(reader io.Reader) (Config, error) {
-	return newViperConfigFromReader(reader)
-}
-
-// newViperConfigFromReader returns a viper config for content provided by passed reader.
-func newViperConfigFromReader(reader io.Reader) (Config, error) {
-
-	viperConfig := viper.New()
-	viperConfig.SetConfigType("yaml")
-	if err := viperConfig.ReadConfig(reader); err != nil {
-		return nil, err
-	}
-	return &ViperConfig{config: viperConfig}, nil
+	return parseConfigFromReader(reader)
 }
 
 // AsIntPtr will return passed int value as pointer.
