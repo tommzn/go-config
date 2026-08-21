@@ -21,7 +21,11 @@ A Go library for loading and accessing YAML configuration from multiple sources 
 ## Installation
 
 ```bash
+# Core package (file, static, and in-memory config sources — no AWS dependency)
 go get github.com/tommzn/go-config
+
+# S3 source (only when AWS S3 support is needed)
+go get github.com/tommzn/go-config/s3
 ```
 
 ## Quick Start
@@ -78,13 +82,17 @@ cfg, err := source.Load()
 
 Downloads a YAML file from an S3 bucket. AWS credentials are resolved via the standard AWS SDK credential chain.
 
+Import the `s3` subpackage to use this source — it is intentionally separated so that the core package stays free of AWS SDK dependencies:
+
 ```go
+import s3config "github.com/tommzn/go-config/s3"
+
 // With explicit region
 region := "eu-central-1"
-source, err := config.NewS3ConfigSource("my-bucket", "configs/app.yml", &region)
+source, err := s3config.NewS3ConfigSource("my-bucket", "configs/app.yml", &region)
 
 // From environment variables: AWS_REGION, GO_CONFIG_S3_BUCKET, GO_CONFIG_S3_KEY
-source, err := config.NewS3ConfigSourceFromEnv()
+source, err := s3config.NewS3ConfigSourceFromEnv()
 
 cfg, err := source.Load()
 ```
@@ -258,4 +266,4 @@ type Config interface {
 ## Requirements
 
 - Go 1.25+
-- AWS credentials configured (only required for S3 source)
+- AWS credentials configured (only required for the `github.com/tommzn/go-config/s3` subpackage)

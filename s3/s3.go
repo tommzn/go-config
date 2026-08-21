@@ -1,4 +1,8 @@
-package config
+// Package s3 provides an AWS S3-backed ConfigSource for go-config.
+// Import this package only when S3 support is needed; it brings in the AWS SDK
+// as a dependency. All other config sources live in the parent package and are
+// dependency-light.
+package s3
 
 import (
 	"bytes"
@@ -8,9 +12,11 @@ import (
 	"os"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
+	awsconfig "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+
+	config "github.com/tommzn/go-config"
 )
 
 // S3ConfigSource loads a YAML config from a file in an AWS S3 bucket.
@@ -28,16 +34,16 @@ type S3ConfigSource struct {
 
 // NewS3ConfigSource returns a new S3 config source which uses the config file from the given S3 bucket.
 // If region is empty it will try to get current AWS region from environment variable AWS_REGION.
-func NewS3ConfigSource(bucket, key string, region *string) (ConfigSource, error) {
+func NewS3ConfigSource(bucket, key string, region *string) (config.ConfigSource, error) {
 	var cfg aws.Config
 	var err error
 
 	if region != nil {
-		cfg, err = config.LoadDefaultConfig(context.TODO(), config.WithRegion(*region))
+		cfg, err = awsconfig.LoadDefaultConfig(context.TODO(), awsconfig.WithRegion(*region))
 	} else if envRegion, ok := os.LookupEnv("AWS_REGION"); ok {
-		cfg, err = config.LoadDefaultConfig(context.TODO(), config.WithRegion(envRegion))
+		cfg, err = awsconfig.LoadDefaultConfig(context.TODO(), awsconfig.WithRegion(envRegion))
 	} else {
-		cfg, err = config.LoadDefaultConfig(context.TODO())
+		cfg, err = awsconfig.LoadDefaultConfig(context.TODO())
 	}
 
 	if err != nil {
@@ -53,7 +59,7 @@ func NewS3ConfigSource(bucket, key string, region *string) (ConfigSource, error)
 
 // NewS3ConfigSourceFromEnv creates a new S3 config source using environment variables:
 // AWS_REGION, GO_CONFIG_S3_BUCKET, GO_CONFIG_S3_KEY
-func NewS3ConfigSourceFromEnv() (ConfigSource, error) {
+func NewS3ConfigSourceFromEnv() (config.ConfigSource, error) {
 
 	region, ok := os.LookupEnv("AWS_REGION")
 	if !ok {
@@ -74,14 +80,14 @@ func NewS3ConfigSourceFromEnv() (ConfigSource, error) {
 }
 
 // Load config file from S3 and pass it to a ViperConfig.
-func (source *S3ConfigSource) Load() (Config, error) {
+func (source *S3ConfigSource) Load() (config.Config, error) {
 
 	reader, err := source.readConfig()
 	if err != nil {
 		return nil, err
 	}
 
-	return newViperConfigFromReader(reader)
+	return config.NewConfigFromReader(reader)
 }
 
 // readConfig downloads the config file from AWS S3 bucket and returns it as an io.Reader.
