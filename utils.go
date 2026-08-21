@@ -15,6 +15,12 @@ var (
 	durationRegexp   = regexp.MustCompile("^[0-9]+[smh,0-9]{0,1}$")
 )
 
+// NewConfigFromReader returns a Config loaded from the YAML content provided by reader.
+// This is useful for implementing custom ConfigSource types in external packages.
+func NewConfigFromReader(reader io.Reader) (Config, error) {
+	return newViperConfigFromReader(reader)
+}
+
 // newViperConfigFromReader returns a viper config for content provided by passed reader.
 func newViperConfigFromReader(reader io.Reader) (Config, error) {
 
