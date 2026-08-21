@@ -8,7 +8,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.22.43
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.107.2
 	github.com/stretchr/testify v1.11.1
-	github.com/tommzn/go-config v0.0.0
+	github.com/tommzn/go-config v1.5.0
 )
 
 require (
@@ -43,5 +43,3 @@ require (
 	golang.org/x/text v0.41.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/tommzn/go-config => ../
