@@ -33,7 +33,7 @@ type S3ConfigSource struct {
 }
 
 // NewS3ConfigSource returns a new S3 config source which uses the config file from the given S3 bucket.
-// If region is empty it will try to get current AWS region from environment variable AWS_REGION.
+// If region is nil it will try to get current AWS region from environment variable AWS_REGION.
 func NewS3ConfigSource(bucket, key string, region *string) (config.ConfigSource, error) {
 	var cfg aws.Config
 	var err error

@@ -31,6 +31,12 @@ func (suite *S3ConfigTestSuite) TestS3ConfigSource() {
 	}
 	suite.Nil(err)
 	suite.NotNil(configSource2)
+
+	// Exercise the actual download/parse path when integration env vars are configured,
+	// instead of only checking that the source was constructed.
+	loadedConfig, loadErr := configSource2.Load()
+	suite.NoError(loadErr)
+	suite.NotNil(loadedConfig)
 }
 
 func (suite *S3ConfigTestSuite) TestS3ConfigSourceWithoutRegion() {
