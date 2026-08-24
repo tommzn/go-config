@@ -10,7 +10,7 @@ import (
 
 var (
 	intRegexp      = regexp.MustCompile("[0-9]+")
-	durationRegexp = regexp.MustCompile("^[0-9]+[smh,0-9]{0,1}$")
+	durationRegexp = regexp.MustCompile("^[0-9]+[smh]?$")
 )
 
 // NewConfigFromReader returns a Config loaded from the content provided by reader,

@@ -68,6 +68,8 @@ func (suite *UtilsTestSuite) TestConvertToDuration() {
 		{"unknown-unit-days", "3d", nil},
 		{"garbage", "xxx", nil},
 		{"non-numeric-prefix", "ABCs", nil},
+		{"trailing-comma", "12,", nil},
+		{"trailing-dash", "12-", nil},
 	}
 
 	for _, tc := range cases {
@@ -110,6 +112,8 @@ func (suite *UtilsTestSuite) TestIsValidDuration() {
 	suite.False(isValidDuration("1d"))
 	suite.False(isValidDuration("8y"))
 	suite.False(isValidDuration("ABC"))
+	suite.False(isValidDuration("12,"))  // trailing comma must be rejected
+	suite.False(isValidDuration("12-"))  // other non-unit trailing chars must be rejected
 }
 
 func (suite *UtilsTestSuite) TestSetConfigType() {
