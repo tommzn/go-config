@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	s3config "github.com/tommzn/go-config/s3"
 	"github.com/stretchr/testify/suite"
+	s3config "github.com/tommzn/go-config/s3"
 )
 
 type S3ConfigTestSuite struct {

@@ -69,21 +69,43 @@ func (suite *ParserTestSuite) TestGetAsIntSliceOnNonSliceValue() {
 
 func (suite *ParserTestSuite) TestToStringTypes() {
 
-	suite.Equal("42", toString(42))
-	suite.Equal("42", toString(int64(42)))
-	suite.Equal("3.14", toString(3.14))
-	suite.Equal("true", toString(true))
-	suite.Equal("", toString([]interface{}{1, 2}))
+	cases := []struct {
+		name  string
+		input interface{}
+		want  string
+	}{
+		{"int", 42, "42"},
+		{"int64", int64(42), "42"},
+		{"float64", 3.14, "3.14"},
+		{"bool", true, "true"},
+		{"unsupported-slice", []interface{}{1, 2}, ""},
+	}
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
+			suite.Equal(tc.want, toString(tc.input))
+		})
+	}
 }
 
 func (suite *ParserTestSuite) TestToIntTypes() {
 
-	suite.Equal(42, toInt(42))
-	suite.Equal(42, toInt(int64(42)))
-	suite.Equal(42, toInt(float64(42)))
-	suite.Equal(42, toInt("42"))
-	suite.Equal(0, toInt("not-a-number"))
-	suite.Equal(0, toInt(true))
+	cases := []struct {
+		name  string
+		input interface{}
+		want  int
+	}{
+		{"int", 42, 42},
+		{"int64", int64(42), 42},
+		{"float64", float64(42), 42},
+		{"numeric-string", "42", 42},
+		{"non-numeric-string", "not-a-number", 0},
+		{"unsupported-bool", true, 0},
+	}
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
+			suite.Equal(tc.want, toInt(tc.input))
+		})
+	}
 }
 
 func (suite *ParserTestSuite) TestNewConfigFromReader() {
