@@ -56,30 +56,40 @@ func (suite *UtilsTestSuite) TestPointerConverter() {
 
 func (suite *UtilsTestSuite) TestConvertToDuration() {
 
-	duration1 := toDuration("7s")
-	suite.NotNil(duration1)
-	suite.Equal(7*time.Second, *duration1)
+	cases := []struct {
+		name  string
+		input string
+		want  *time.Duration
+	}{
+		{"seconds", "7s", ptrDuration(7 * time.Second)},
+		{"minutes", "5m", ptrDuration(5 * time.Minute)},
+		{"hours", "2h", ptrDuration(2 * time.Hour)},
+		{"bare-number-defaults-to-seconds", "11", ptrDuration(11 * time.Second)},
+		{"unknown-unit-days", "3d", nil},
+		{"garbage", "xxx", nil},
+		{"non-numeric-prefix", "ABCs", nil},
+	}
 
-	duration2 := toDuration("5m")
-	suite.NotNil(duration2)
-	suite.Equal(5*time.Minute, *duration2)
+	for _, tc := range cases {
+		suite.Run(tc.name, func() {
+			got := toDuration(tc.input)
+			if tc.want == nil {
+				suite.Nil(got)
+				return
+			}
+			suite.NotNil(got)
+			suite.Equal(*tc.want, *got)
+		})
+	}
 
-	duration3 := toDuration("2h")
-	suite.NotNil(duration3)
-	suite.Equal(2*time.Hour, *duration3)
-
-	duration4 := toDuration("11")
-	suite.NotNil(duration4)
-	suite.Equal(11*time.Second, *duration4)
-
-	duration5 := AsDuration("7s")
-	suite.NotNil(duration5)
-	suite.Equal(7*time.Second, *duration5)
-
-	suite.Nil(toDuration("3d"))
-	suite.Nil(toDuration("xxx"))
-	suite.Nil(toDuration("ABCs"))
+	suite.Run("as-duration-public-wrapper", func() {
+		got := AsDuration("7s")
+		suite.NotNil(got)
+		suite.Equal(7*time.Second, *got)
+	})
 }
+
+func ptrDuration(d time.Duration) *time.Duration { return &d }
 
 func (suite *UtilsTestSuite) TestExtracNumbers() {
 
