@@ -33,7 +33,7 @@ func (source *FileConfigSource) Load() (Config, error) {
 	if source.configFile != nil {
 		fileContent, err := os.ReadFile(*source.configFile)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("reading config file %q: %w", *source.configFile, err)
 		}
 		return parseConfig(fileContent)
 	}

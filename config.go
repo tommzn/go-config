@@ -1,8 +1,9 @@
-// Package config provides access to config from different sources in YAML format.
-// Uses viper config from github.com/spf13/viper to load and access config values.
+// Package config provides access to config from different sources in YAML or JSON format.
+// Config values can be loaded from files, static strings, or custom readers.
 package config
 
-// NewConfigSource returns the default config loader, the ViperConfigSource.
+// NewConfigSource returns the default config loader, a FileConfigSource that
+// searches standard locations for a config file.
 func NewConfigSource() ConfigSource {
 	return NewFileConfigSource(nil)
 }
