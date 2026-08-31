@@ -2,12 +2,10 @@ package config
 
 import (
 	"strings"
+	"testing"
 	"time"
 
 	"github.com/stretchr/testify/suite"
-	//"log"
-
-	"testing"
 )
 
 type UtilsTestSuite struct {

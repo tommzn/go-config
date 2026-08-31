@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"strconv"
 	"strings"
@@ -55,7 +56,7 @@ func parseConfigFromReader(reader io.Reader) (Config, error) {
 
 	content, err := io.ReadAll(reader)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("reading config: %w", err)
 	}
 	return parseConfig(content)
 }
